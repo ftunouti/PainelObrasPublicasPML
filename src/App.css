@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ajustes gerais para websites */
+.logo {
+  @apply h-16 p-4; /* Ajuste de tamanho para sites */
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 1.5em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 1.5em #61dafbaa);
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.header {
+  font-size: 2rem;
+  padding: 1rem;
+  color: black; /* Melhor contraste */
+  text-align: center;
+}
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1.5rem 3rem;
+}
+
+.header-title {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.time-date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.card {
+  padding: 1.5rem;
+  font-size: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.panel {
+  width: 100%;
+  height: auto;
+  max-height: 60vh; /* Ajuste adequado para sites */
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.panel-item {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #333;
+  padding: 0.5rem;
+} 
+
+.button {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.button:hover {
+  background: #0056b3;
+}
+/* Adicione estas regras ao final do arquivo */
+
+/* Estilos para TV */
+.tv-container {
+  font-size: 1.5vw; /* Tamanho de fonte responsivo */
+}
+
+/* Teleprompter styles */
+.teleprompter-container {
+  height: 55vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.teleprompter-content {
+  position: absolute;
+  width: 100%;
+  transition: all 0.3s ease; /* Transição mais suave */
+}
+
+/* Ajustes de legibilidade */
+.panel-item, .card {
+  font-size: 2rem; /* Tamanho maior para TV */
+  line-height: 1.5;
+}
+/* Melhor contraste para texto menor */
+.bg-gray-700 {
+  background-color: #374151; /* Tom mais escuro para melhor contraste */
+}
+
+/* Barra de rolagem personalizada */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.1);
+}

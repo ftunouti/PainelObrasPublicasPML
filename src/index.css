@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 100, 108, 255;
+    --color-secondary: 97, 218, 251;
+  }
+  
+  body {
+    @apply min-h-screen m-0 flex place-items-center;
+    min-width: 320px;
+  }
+}
