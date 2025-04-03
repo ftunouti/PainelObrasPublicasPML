@@ -216,18 +216,28 @@ function App() {
       }}
     >
       {/* Cabeçalho */}
-<div className="flex justify-between items-center p-8">
-  <h1 className="text-5xl font-bold flex-1">Painel de Obras Públicas</h1>
-  <div className="flex flex-col items-end space-y-2">
-    <div className="text-4xl font-medium">{tempoRestante}</div>
-    <div className="text-3xl">{new Date().toLocaleDateString('pt-BR')}</div>
-  </div>
-</div>
+      <div className="flex justify-between items-center p-8">
+        <h1 className="text-5xl font-bold flex-1">Painel de Obras Públicas</h1>
+        <div className="flex flex-col items-end space-y-2">
+          <div className="text-4xl font-medium">{tempoRestante}</div>
+          <div className="text-3xl">{new Date().toLocaleDateString('pt-BR')}</div>
+        </div>
+      </div>
 
       {/* Container principal */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-4/5 px-8 pb-8">
+      <div
+        className="text-white overflow-hidden flex flex-col"
+        style={{
+          width: `${SCREEN_WIDTH}px`,
+          height: `${SCREEN_HEIGHT}px`,
+          backgroundColor: '#111827'
+        }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-grow px-8 pb-8"></div>
+
+
         {/* Painel principal */}
-        <div className="lg:col-span-2 bg-gray-800 rounded-3xl p-8 shadow-2xl relative">
+        <div className="lg:col-span-2 bg-gray-800 rounded-3xl p-8 shadow-2xl relative flex flex-col h-full">
           <div className={`absolute -top-5 -right-5 ${statusPrazo.cor} text-white rounded-full p-4 shadow-xl flex items-center z-10`}>
             {statusPrazo.icone}
             <span className="text-2xl font-bold">{statusPrazo.texto}</span>
@@ -279,7 +289,7 @@ function App() {
         </div>
 
         {/* Painel secundário */}
-        <div className="bg-gray-800 rounded-3xl p-8 shadow-2xl flex flex-col">
+        <div className="bg-gray-800 rounded-3xl p-8 shadow-2xl flex flex-col h-full">
           <h2 className="text-4xl font-bold mb-6">Resumo das Obras</h2>
 
           {/* Gráfico e totais */}
@@ -323,8 +333,8 @@ function App() {
                     <div
                       key={obra.id}
                       className={`p-4 mb-3 rounded-xl transition-all ${index === indiceAtual
-                          ? 'ring-2 ring-blue-500 bg-gray-700 scale-[1.02]'
-                          : 'bg-gray-700 opacity-80'
+                        ? 'ring-2 ring-blue-500 bg-gray-700 scale-[1.02]'
+                        : 'bg-gray-700 opacity-80'
                         }`}
                       style={{
                         minHeight: '80px', // Altura reduzida

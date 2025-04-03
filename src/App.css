@@ -140,3 +140,24 @@
 .scrollbar-thin::-webkit-scrollbar-track {
   background-color: rgba(255, 255, 255, 0.1);
 }
+/* Garante que o container ocupe toda a altura */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* Ajustes para os painéis */
+.panel-main {
+  min-height: 0; /* Permite que o flexbox controle o tamanho */
+}
+
+.panel-secondary {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Espaçamento para os indicadores de navegação */
+.navigation-indicators {
+  padding-bottom: 2rem;
+}
