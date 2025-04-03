@@ -205,7 +205,7 @@ function App() {
         >
             {/* Cabeçalho */}
             <div className="flex justify-between items-center p-8">
-                <h1 className="text-5xl font-bold flex-1">Painel de Obras Públicas</h1>
+                <h1 className="text-7xl font-bold flex-1">Painel de Obras Públicas</h1>
                 <div className="flex flex-col items-end space-y-2">
                     <div className="text-4xl font-medium">{tempoRestante}</div>
                     <div className="text-3xl">{new Date().toLocaleDateString('pt-BR')}</div>
@@ -214,7 +214,7 @@ function App() {
 
             {/* Container principal */}
             <div className="flex flex-col flex-grow px-8 pb-8 gap-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-grow">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 height=360px" > {/* flex-grow */}
                     {/* Painel principal */}
                     <div className="lg:col-span-2 bg-gray-800 rounded-3xl p-8 shadow-2xl relative flex flex-col">
                         <div className={`absolute -top-5 -right-5 ${statusPrazo.cor} text-white rounded-full p-4 shadow-xl flex items-center z-10`}>
@@ -272,7 +272,7 @@ function App() {
 
                         {/* Gráfico e totais */}
                         <div className="grid grid-cols-1 gap-6 mb-6">
-                            <div className="bg-gray-700 p-4 rounded-xl" style={{ height: '250px' }}>
+                            <div className="bg-gray-700 p-4 rounded-xl" style={{ height: '240px' }}>
                                 <Bar data={chartData} options={chartOptions} />
                             </div>
 
@@ -296,7 +296,7 @@ function App() {
                             <div
                                 className="teleprompter-container bg-gray-900 rounded-xl p-4"
                                 style={{
-                                    height: '540px', // Ou 600px conforme necessidade
+                                    height: '360px', // Ou 600px conforme necessidade
                                     overflow: 'hidden'
                                 }}
                                 ref={obrasListRef}

@@ -65,7 +65,7 @@
 .panel {
   width: 100%;
   height: auto;
-  max-height: 540px; /* Ajuste adequado para sites */
+  max-height: 540px; /* Ajuste adequado para TV */
   overflow-y: auto;
   scroll-behavior: smooth;
   padding: 1rem;
