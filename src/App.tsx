@@ -235,7 +235,7 @@ function App() {
 
                             {/* Barra de progresso */}
                             <div className="mt-6 mb-10">
-                                <div className="flex justify-between text-3xl mb-4">
+                                <div className="flex justify-between text-3xl">
                                     <span>Progresso da Obra</span>
                                     <span className="font-bold">{percentual.toFixed(2)}%</span>
                                 </div>
@@ -250,14 +250,14 @@ function App() {
                             {/* Informações */}
                             <div className="grid grid-cols-2 gap-8 mt-auto">
                                 <div>
-                                    <h3 className="text-3xl font-semibold mb-4">Cronograma</h3>
+                                    <h3 className="text-3xl font-semibold">Cronograma</h3>
                                     <div className="space-y-3 text-2xl">
                                         <p>Início: {formatarData(obraAtual.data_inicio)}</p>
                                         <p>Término: {formatarData(obraAtual.previsao_termino)}</p>
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="text-3xl font-semibold mb-4">Investimento</h3>
+                                    <h3 className="text-3xl font-semibold">Investimento</h3>
                                     <p className="text-4xl font-bold text-green-400">
                                         R$ {obraAtual.valor_total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </p>
@@ -294,7 +294,11 @@ function App() {
                         <div className="flex-grow overflow-hidden">
                             <h3 className="text-3xl font-semibold mb-4">Todas as Obras</h3>
                             <div
-                                className="teleprompter-container bg-gray-900 rounded-xl p-4 h-[300px] overflow-hidden"
+                                className="teleprompter-container bg-gray-900 rounded-xl p-4"
+                                style={{
+                                    height: '540px', // Ou 600px conforme necessidade
+                                    overflow: 'hidden'
+                                }}
                                 ref={obrasListRef}
                             >
                                 <div className="teleprompter-content space-y-3">
@@ -310,8 +314,8 @@ function App() {
                                                     itemRefs.current[index] = el; // Armazena a referência no array
                                                 }}
                                                 className={`p-4 rounded-xl transition-all ${index === indiceAtual
-                                                        ? 'ring-2 ring-blue-500 bg-gray-700 scale-[1.02]'
-                                                        : 'bg-gray-700 opacity-80'
+                                                    ? 'ring-2 ring-blue-500 bg-gray-700 scale-[1.02]'
+                                                    : 'bg-gray-700 opacity-80'
                                                     }`}
                                             >
 
