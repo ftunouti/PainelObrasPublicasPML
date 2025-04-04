@@ -205,16 +205,16 @@ function App() {
         >
             {/* Cabeçalho */}
             <div className="flex justify-between items-center p-8">
-                <h1 className="text-7xl font-bold flex-1">Painel de Obras Públicas</h1>
+                <h1 className="text-5xl font-bold flex-1">Painel de Obras Públicas</h1>
                 <div className="flex flex-col items-end space-y-2">
-                    <div className="text-4xl font-medium">{tempoRestante}</div>
-                    <div className="text-3xl">{new Date().toLocaleDateString('pt-BR')}</div>
+                    <div className="text-3xl font-medium">{tempoRestante}</div>
+                    <div className="text-2xl">{new Date().toLocaleDateString('pt-BR')}</div>
                 </div>
             </div>
 
             {/* Container principal */}
             <div className="flex flex-col flex-grow px-8 pb-8 gap-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 height=360px" > {/* flex-grow */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 height=200px" > {/* flex-grow */}
                     {/* Painel principal */}
                     <div className="lg:col-span-2 bg-gray-800 rounded-3xl p-8 shadow-2xl relative flex flex-col">
                         <div className={`absolute -top-5 -right-5 ${statusPrazo.cor} text-white rounded-full p-4 shadow-xl flex items-center z-10`}>
@@ -268,7 +268,8 @@ function App() {
 
                     {/* Painel secundário */}
                     <div className="bg-gray-800 rounded-3xl p-8 shadow-2xl flex flex-col">
-                        <h2 className="text-4xl font-bold mb-6">Resumo das Obras</h2>
+                        <h2 className="text-2xl font-semibold mb-4">Resumo das Obras</h2>
+
 
                         {/* Gráfico e totais */}
                         <div className="grid grid-cols-1 gap-6 mb-6">
@@ -278,12 +279,12 @@ function App() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-gray-700 p-4 rounded-xl">
-                                    <h3 className="text-2xl font-semibold">Total Obras</h3>
-                                    <p className="text-3xl font-bold text-blue-400">{totalObras}</p>
+                                    <h3 className="text-lg font-medium">Total Obras</h3>
+                                    <p className="text-xl font-semibold text-blue-400">{totalObras}</p>
                                 </div>
                                 <div className="bg-gray-700 p-4 rounded-xl">
-                                    <h3 className="text-2xl font-semibold">Investimento Total</h3>
-                                    <p className="text-3xl font-bold text-green-400">
+                                    <h3 className="text-lg font-medium">Investimento Total</h3>
+                                    <p className="text-xl font-semibold text-green-400">
                                         R$ {totalInvestido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </p>
                                 </div>
@@ -291,45 +292,44 @@ function App() {
                         </div>
 
                         {/* Lista de obras */}
-                        <div className="flex-grow overflow-hidden">
-                            <h3 className="text-3xl font-semibold mb-4">Todas as Obras</h3>
+                        <div className="flex-grow min-w-0">
+                            <h3 className="text-xl font-medium mb-2">Todas as Obras</h3>
+
                             <div
-                                className="teleprompter-container bg-gray-900 rounded-xl p-4"
+                                className="teleprompter-container bg-gray-900 rounded-xl "
                                 style={{
-                                    height: '360px', // Ou 600px conforme necessidade
-                                    overflow: 'hidden'
+                                    height: '360px',
+                                    overflow: 'hidden',
                                 }}
                                 ref={obrasListRef}
                             >
-                                <div className="teleprompter-content space-y-3">
+                                <div className="teleprompter-content ">
                                     {obras.map((obra, index) => {
                                         const dias = calcularDiasRestantes(obra.previsao_termino);
                                         const status = getStatusPrazo(dias, obra.progresso);
-                                        const obraPercentual = obra.progresso * 100;
 
                                         return (
                                             <div
                                                 key={obra.id}
                                                 ref={(el) => {
-                                                    itemRefs.current[index] = el; // Armazena a referência no array
+                                                    itemRefs.current[index] = el;
                                                 }}
-                                                className={`p-4 rounded-xl transition-all ${index === indiceAtual
-                                                    ? 'ring-2 ring-blue-500 bg-gray-700 scale-[1.02]'
-                                                    : 'bg-gray-700 opacity-80'
+                                                className={`p-1.5 rounded-md transition-all text-sm overflow-hidden ${index === indiceAtual
+                                                        ? 'ring-1 ring-blue-500 bg-gray-700 scale-[1.01]'
+                                                        : 'bg-gray-700 opacity-80'
                                                     }`}
                                             >
+                                                <div className="flex items-center overflow-hidden">
+                                                    {/* Nome truncado com largura limitada */}
+                                                    <div className="flex-1 overflow-hidden">
+                                                        <span className="block truncate text-ellipsis">{obra.descricao}</span>
+                                                    </div>
 
-                                                <div className="flex justify-between items-center">
-                                                    <h3 className="text-xl font-semibold truncate">{obra.descricao}</h3>
-                                                    <span className={`px-3 py-1 rounded-full text-sm ${status.cor}`}>
-                                                        {status.texto}
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between mt-1 text-lg">
-                                                    <span>{obra.regiao}</span>
-                                                    <span className="font-bold">
-                                                        {obraPercentual.toFixed(2)}%
-                                                    </span>
+                                                    {/* Bolinha de status */}
+                                                    <span
+                                                        className={`w-3 h-3 ml-2 rounded-full flex-shrink-0 ${status.cor}`}
+                                                        title={status.texto}
+                                                    />
                                                 </div>
                                             </div>
                                         );
@@ -337,6 +337,9 @@ function App() {
                                 </div>
                             </div>
                         </div>
+
+
+
                     </div>
                 </div>
 
