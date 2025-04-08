@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
+    "@vercel/node": "^5.1.14",
     "chart.js": "^4.4.8",
     "lucide-react": "^0.486.0",
     "react": "^19.0.0",
