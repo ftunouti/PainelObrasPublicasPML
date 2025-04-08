@@ -35,35 +35,44 @@ interface Obra {
 
 async function fetchObras() {
     const query = `
-        query {
-            obrasServicosDetails(entidade: 141) {
-                id
-                apelido
-                numero
-                situacao
-                localizacao
-                regiao
-                numero_contrato
-                nome_contratado
-                valor_total_contratos
-                progresso
-                data_inicio
-                previsao_termino
-            }
+      query {
+        obrasServicosDetails(entidade: 141) {
+          id
+          apelido
+          numero
+          situacao
+          localizacao
+          regiao
+          numero_contrato
+          nome_contratado
+          valor_total_contratos
+          progresso
+          data_inicio
+          previsao_termino
         }
+      }
     `;
-
-    const response = await fetch('https://obras-ng.ciga.sc.gov.br/api', {
+  
+    try {
+      const response = await fetch('/api', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ query }),
-    });
-
-    const result = await response.json();
-    return result.data.obrasServicosDetails;
-}
+      });
+  
+      if (!response.ok) {
+        throw new Error('Erro na requisição');
+      }
+  
+      const result = await response.json();
+      return result.data.obrasServicosDetails;
+    } catch (error) {
+      console.error('Erro ao buscar obras:', error);
+      throw error;
+    }
+  }
 
 function App() {
     const [indiceAtual, setIndiceAtual] = useState(0);
