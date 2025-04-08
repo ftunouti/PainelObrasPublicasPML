@@ -33,7 +33,7 @@ interface Obra {
     localizacao: string;
 }
 
-async function fetchObras() {
+aasync function fetchObras() {
     const query = `
       query {
         obrasServicosDetails(entidade: 141) {
@@ -54,7 +54,7 @@ async function fetchObras() {
     `;
 
     try {
-        const response = await fetch('https://painel-obras-publicas-pml.vercel.app/api/graphql', {  // Note a mudança para /api/graphql
+        const response = await fetch('/api/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -63,16 +63,39 @@ async function fetchObras() {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`Erro HTTP! status: ${response.status}`);
         }
 
-        return await response.json();
+        const result = await response.json();
+
+        // Validação robusta da resposta
+        if (!result.data || !result.data.obrasServicosDetails) {
+            throw new Error('Estrutura de dados inválida da API');
+        }
+
+        // Garante que é um array antes de usar .map()
+        const obrasArray = Array.isArray(result.data.obrasServicosDetails)
+            ? result.data.obrasServicosDetails
+            : [result.data.obrasServicosDetails];
+
+        return obrasArray.map(obra => ({
+            id: obra.id || 0,
+            descricao: obra.apelido || `Obra ${obra.numero || 'N/A'}`,
+            regiao: obra.regiao || 'Desconhecida',
+            valor_total: obra.valor_total_contratos || 0,
+            nome_contratado: obra.nome_contratado || 'Não informado',
+            progresso: obra.progresso ? Number(obra.progresso) : 0,
+            data_inicio: obra.data_inicio || '',
+            previsao_termino: obra.previsao_termino || '',
+            situacaoDescricao: obra.situacao || 'Em andamento',
+            localizacao: obra.localizacao || 'Local não especificado'
+        }));
+
     } catch (error) {
-        console.error('Failed to fetch obras:', error);
+        console.error('Falha ao buscar obras:', error);
         throw error;
     }
 }
-
 function App() {
     const [indiceAtual, setIndiceAtual] = useState(0);
     const [tempoRestante, setTempoRestante] = useState('');
