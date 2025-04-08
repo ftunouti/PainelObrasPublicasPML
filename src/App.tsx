@@ -53,7 +53,7 @@ async function fetchObras() {
         }
     `;
 
-    const response = await fetch('https://obras-ng.ciga.sc.gov.br/api', {
+    const response = await fetch('/api', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
