@@ -20,7 +20,22 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const SCREEN_WIDTH = 1920;
 const SCREEN_HEIGHT = 1080;
 
-interface Obra {
+interface ObraAPI {
+    id: number;
+    apelido?: string;
+    numero?: string;
+    situacao?: string;
+    localizacao?: string;
+    regiao?: string;
+    numero_contrato?: string;
+    nome_contratado?: string;
+    valor_total_contratos?: number;
+    progresso?: number | string;
+    data_inicio?: string;
+    previsao_termino?: string;
+  }
+  
+  interface Obra {
     id: number;
     descricao: string;
     regiao: string;
@@ -31,9 +46,9 @@ interface Obra {
     previsao_termino: string;
     situacaoDescricao: string;
     localizacao: string;
-}
+  }
 
-aasync function fetchObras() {
+  async function fetchObras(): Promise<Obra[]> {
     const query = `
       query {
         obrasServicosDetails(entidade: 141) {
@@ -52,50 +67,50 @@ aasync function fetchObras() {
         }
       }
     `;
-
+  
     try {
-        const response = await fetch('/api/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query })
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erro HTTP! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        // Validação robusta da resposta
-        if (!result.data || !result.data.obrasServicosDetails) {
-            throw new Error('Estrutura de dados inválida da API');
-        }
-
-        // Garante que é um array antes de usar .map()
-        const obrasArray = Array.isArray(result.data.obrasServicosDetails)
-            ? result.data.obrasServicosDetails
-            : [result.data.obrasServicosDetails];
-
-        return obrasArray.map(obra => ({
-            id: obra.id || 0,
-            descricao: obra.apelido || `Obra ${obra.numero || 'N/A'}`,
-            regiao: obra.regiao || 'Desconhecida',
-            valor_total: obra.valor_total_contratos || 0,
-            nome_contratado: obra.nome_contratado || 'Não informado',
-            progresso: obra.progresso ? Number(obra.progresso) : 0,
-            data_inicio: obra.data_inicio || '',
-            previsao_termino: obra.previsao_termino || '',
-            situacaoDescricao: obra.situacao || 'Em andamento',
-            localizacao: obra.localizacao || 'Local não especificado'
-        }));
-
+      const response = await fetch('/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query })
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Erro HTTP! status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+  
+      if (!result.data?.obrasServicosDetails) {
+        throw new Error('Estrutura de dados inválida da API');
+      }
+  
+      const obrasAPI: ObraAPI[] = Array.isArray(result.data.obrasServicosDetails) 
+        ? result.data.obrasServicosDetails 
+        : [result.data.obrasServicosDetails];
+  
+      return obrasAPI.map((obra: ObraAPI): Obra => ({
+        id: obra.id || 0,
+        descricao: obra.apelido || `Obra ${obra.numero || 'N/A'}`,
+        regiao: obra.regiao || 'Desconhecida',
+        valor_total: obra.valor_total_contratos || 0,
+        nome_contratado: obra.nome_contratado || 'Não informado',
+        progresso: typeof obra.progresso === 'string' 
+          ? parseFloat(obra.progresso.replace(',', '.')) 
+          : Number(obra.progresso) || 0,
+        data_inicio: obra.data_inicio || '',
+        previsao_termino: obra.previsao_termino || '',
+        situacaoDescricao: obra.situacao || 'Em andamento',
+        localizacao: obra.localizacao || 'Local não especificado'
+      }));
+  
     } catch (error) {
-        console.error('Falha ao buscar obras:', error);
-        throw error;
+      console.error('Falha ao buscar obras:', error);
+      throw error;
     }
-}
+  }
 function App() {
     const [indiceAtual, setIndiceAtual] = useState(0);
     const [tempoRestante, setTempoRestante] = useState('');
