@@ -52,27 +52,26 @@ async function fetchObras() {
         }
       }
     `;
-  
+
     try {
-      const response = await fetch('/api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Erro na requisição');
-      }
-  
-      const result = await response.json();
-      return result.data.obrasServicosDetails;
+        const response = await fetch('/api/graphql', {  // Note a mudança para /api/graphql
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ query })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
     } catch (error) {
-      console.error('Erro ao buscar obras:', error);
-      throw error;
+        console.error('Failed to fetch obras:', error);
+        throw error;
     }
-  }
+}
 
 function App() {
     const [indiceAtual, setIndiceAtual] = useState(0);
@@ -82,14 +81,14 @@ function App() {
     const [error, setError] = useState<string | null>(null);
     const obrasListRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-    
+
     useEffect(() => {
         const interval = setInterval(() => {
-          window.location.reload();
+            window.location.reload();
         }, 30 * 60 * 1000); // 30 minutos em milissegundos
-      
+
         return () => clearInterval(interval); // limpa o intervalo ao desmontar o componente
-      }, []);
+    }, []);
 
 
 
@@ -331,10 +330,10 @@ function App() {
                                     </p>
                                 </div>
                                 <div className="flex items-end justify-start">
-                                    <img 
-                                        src={logoPML} 
-                                        alt="Logo PML" 
-                                        className="h-24 object-contain" 
+                                    <img
+                                        src={logoPML}
+                                        alt="Logo PML"
+                                        className="h-24 object-contain"
                                         style={{ maxWidth: '360px' }}
                                     />
                                 </div>
@@ -387,8 +386,8 @@ function App() {
                                                     itemRefs.current[index] = el;
                                                 }}
                                                 className={`p-1.5 rounded-md transition-all text-sm overflow-hidden ${index === indiceAtual
-                                                        ? 'ring-1 ring-blue-500 bg-gray-700 scale-[1.01]'
-                                                        : 'bg-gray-700 opacity-80'
+                                                    ? 'ring-1 ring-blue-500 bg-gray-700 scale-[1.01]'
+                                                    : 'bg-gray-700 opacity-80'
                                                     }`}
                                             >
                                                 <div className="flex items-center overflow-hidden">

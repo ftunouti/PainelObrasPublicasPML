@@ -2,12 +2,13 @@
     "version": 2,
     "routes": [
       {
-        "src": "/api/(.*)",
-        "dest": "https://obras-ng.ciga.sc.gov.br",
+        "src": "/api/graphql",
+        "dest": "https://obras-ng.ciga.sc.gov.br/api",
+        "methods": ["POST"],
         "headers": {
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization"
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Headers": "Content-Type"
         }
       }
     ]
