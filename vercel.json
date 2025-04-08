@@ -3,7 +3,7 @@
     "routes": [
       {
         "src": "/api/(.*)",
-        "dest": "https://obras-ng.ciga.sc.gov.br/api",
+        "dest": "https://obras-ng.ciga.sc.gov.br",
         "headers": {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
