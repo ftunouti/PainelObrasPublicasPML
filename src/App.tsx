@@ -12,7 +12,7 @@ import {
     ChartOptions,
     FontSpec
 } from 'chart.js';
-import obrasData from './data/obras.json';
+import logoPML from './img/logoPML.jpg';
 import './App.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -33,27 +33,83 @@ interface Obra {
     localizacao: string;
 }
 
+async function fetchObras() {
+    const query = `
+        query {
+            obrasServicosDetails(entidade: 141) {
+                id
+                apelido
+                numero
+                situacao
+                localizacao
+                regiao
+                numero_contrato
+                nome_contratado
+                valor_total_contratos
+                progresso
+                data_inicio
+                previsao_termino
+            }
+        }
+    `;
+
+    const response = await fetch('/api/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+    return result.data.obrasServicosDetails;
+}
+
 function App() {
     const [indiceAtual, setIndiceAtual] = useState(0);
     const [tempoRestante, setTempoRestante] = useState('');
     const [obras, setObras] = useState<Obra[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const obrasListRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    
+    useEffect(() => {
+        const interval = setInterval(() => {
+          window.location.reload();
+        }, 30 * 60 * 1000); // 30 minutos em milissegundos
+      
+        return () => clearInterval(interval); // limpa o intervalo ao desmontar o componente
+      }, []);
+
+
 
     useEffect(() => {
-        const dadosFormatados = obrasData.map(obra => ({
-            id: obra.id,
-            descricao: obra.descricao,
-            regiao: obra.regiao,
-            valor_total: obra.valor_total,
-            nome_contratado: obra.nome_contratado,
-            progresso: parseFloat(obra.percentualConcluido.replace(',', '.')) / 100,
-            data_inicio: obra.data_inicio,
-            previsao_termino: obra.previsao_termino,
-            situacaoDescricao: obra.situacaoDescricao,
-            localizacao: obra.localizacao
-        }));
-        setObras(dadosFormatados);
+        const loadObras = async () => {
+            try {
+                const obrasApi = await fetchObras();
+                const dadosFormatados = obrasApi.map((obra: any) => ({
+                    id: obra.id,
+                    descricao: obra.apelido || `Obra ${obra.numero}`,
+                    regiao: obra.regiao || 'Desconhecida',
+                    valor_total: obra.valor_total_contratos || 0,
+                    nome_contratado: obra.nome_contratado || 'Não informado',
+                    progresso: obra.progresso || 0,
+                    data_inicio: obra.data_inicio,
+                    previsao_termino: obra.previsao_termino,
+                    situacaoDescricao: obra.situacao || 'Em andamento',
+                    localizacao: obra.localizacao || 'Local não especificado'
+                }));
+                setObras(dadosFormatados);
+                setLoading(false);
+            } catch (err) {
+                setError('Erro ao carregar os dados das obras');
+                setLoading(false);
+                console.error('Erro na requisição:', err);
+            }
+        };
+
+        loadObras();
     }, []);
 
     const obrasPorRegiao = obras.reduce((acc, obra) => {
@@ -182,8 +238,16 @@ function App() {
         return () => clearInterval(timer);
     }, []);
 
-    if (obras.length === 0) {
+    if (loading) {
         return <div className="flex justify-center items-center h-screen">Carregando obras...</div>;
+    }
+
+    if (error) {
+        return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
+    }
+
+    if (obras.length === 0) {
+        return <div className="flex justify-center items-center h-screen">Nenhuma obra encontrada</div>;
     }
 
     const obraAtual = obras[indiceAtual];
@@ -203,7 +267,6 @@ function App() {
                 backgroundColor: '#111827'
             }}
         >
-            {/* Cabeçalho */}
             <div className="flex justify-between items-center p-8">
                 <h1 className="text-5xl font-bold flex-1">Painel de Obras Públicas</h1>
                 <div className="flex flex-col items-end space-y-2">
@@ -212,10 +275,8 @@ function App() {
                 </div>
             </div>
 
-            {/* Container principal */}
             <div className="flex flex-col flex-grow px-8 pb-8 gap-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 height=200px" > {/* flex-grow */}
-                    {/* Painel principal */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 height=200px">
                     <div className="lg:col-span-2 bg-gray-800 rounded-3xl p-8 shadow-2xl relative flex flex-col">
                         <div className={`absolute -top-5 -right-5 ${statusPrazo.cor} text-white rounded-full p-4 shadow-xl flex items-center z-10`}>
                             {statusPrazo.icone}
@@ -233,7 +294,6 @@ function App() {
                                 </div>
                             </div>
 
-                            {/* Barra de progresso */}
                             <div className="mt-6 mb-10">
                                 <div className="flex justify-between text-3xl">
                                     <span>Progresso da Obra</span>
@@ -247,8 +307,7 @@ function App() {
                                 </div>
                             </div>
 
-                            {/* Informações */}
-                            <div className="grid grid-cols-2 gap-8 mt-auto">
+                            <div className="grid grid-cols-3 gap-8 mt-auto">
                                 <div>
                                     <h3 className="text-3xl font-semibold">Cronograma</h3>
                                     <div className="space-y-3 text-2xl">
@@ -262,16 +321,21 @@ function App() {
                                         R$ {obraAtual.valor_total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </p>
                                 </div>
+                                <div className="flex items-end justify-start">
+                                    <img 
+                                        src={logoPML} 
+                                        alt="Logo PML" 
+                                        className="h-24 object-contain" 
+                                        style={{ maxWidth: '360px' }}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Painel secundário */}
                     <div className="bg-gray-800 rounded-3xl p-8 shadow-2xl flex flex-col">
                         <h2 className="text-2xl font-semibold mb-4">Resumo das Obras</h2>
 
-
-                        {/* Gráfico e totais */}
                         <div className="grid grid-cols-1 gap-6 mb-6">
                             <div className="bg-gray-700 p-4 rounded-xl" style={{ height: '240px' }}>
                                 <Bar data={chartData} options={chartOptions} />
@@ -291,19 +355,18 @@ function App() {
                             </div>
                         </div>
 
-                        {/* Lista de obras */}
                         <div className="flex-grow min-w-0">
                             <h3 className="text-xl font-medium mb-2">Todas as Obras</h3>
 
                             <div
-                                className="teleprompter-container bg-gray-900 rounded-xl "
+                                className="teleprompter-container bg-gray-900 rounded-xl"
                                 style={{
                                     height: '360px',
                                     overflow: 'hidden',
                                 }}
                                 ref={obrasListRef}
                             >
-                                <div className="teleprompter-content ">
+                                <div className="teleprompter-content">
                                     {obras.map((obra, index) => {
                                         const dias = calcularDiasRestantes(obra.previsao_termino);
                                         const status = getStatusPrazo(dias, obra.progresso);
@@ -320,12 +383,9 @@ function App() {
                                                     }`}
                                             >
                                                 <div className="flex items-center overflow-hidden">
-                                                    {/* Nome truncado com largura limitada */}
                                                     <div className="flex-1 overflow-hidden">
                                                         <span className="block truncate text-ellipsis">{obra.descricao}</span>
                                                     </div>
-
-                                                    {/* Bolinha de status */}
                                                     <span
                                                         className={`w-3 h-3 ml-2 rounded-full flex-shrink-0 ${status.cor}`}
                                                         title={status.texto}
@@ -337,20 +397,15 @@ function App() {
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
 
-                {/* Indicadores de navegação */}
                 <div className="flex justify-center pb-4 space-x-3">
                     {obras.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => setIndiceAtual(index)}
-                            className={`w-4 h-4 rounded-full ${index === indiceAtual ? 'bg-white' : 'bg-gray-600'
-                                }`}
+                            className={`w-4 h-4 rounded-full ${index === indiceAtual ? 'bg-white' : 'bg-gray-600'}`}
                             aria-label={`Ir para obra ${index + 1}`}
                         />
                     ))}
