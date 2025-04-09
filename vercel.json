@@ -1,19 +1,16 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "api/graphql.js", "use": "@vercel/node" },
-      { "src": "package.json", "use": "@vercel/static-build" }
-    ],
-    "routes": [
-      {
-        "src": "/api/graphql",
-        "dest": "/api/graphql",
-        "methods": ["POST", "OPTIONS"]
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/index.html"
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/graphql",
+      "dest": "https://obras-ng.ciga.sc.gov.br/api",
+      "methods": ["POST"],
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Headers": "Content-Type"
       }
-    ]
-  }
+    }
+  ]
+}
   
