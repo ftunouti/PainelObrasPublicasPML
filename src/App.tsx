@@ -56,7 +56,7 @@ async function fetchObras() {
     `;
   
     try {
-      const response = await fetch('/api', {
+      const response = await fetch('https://painel-obras-publicas-pml.vercel.app/api/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
