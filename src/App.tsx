@@ -67,26 +67,27 @@ async function fetchObras() {
         }
       }
     `;
-
+  
     try {
-        const response = await fetch('/api/graphql', {  // Note a mudança para /api/graphql
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        return await response.json();
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Erro na requisição');
+      }
+  
+      const result = await response.json();
+      return result.data.obrasServicosDetails;
     } catch (error) {
-        console.error('Failed to fetch obras:', error);
-        throw error;
+      console.error('Erro ao buscar obras:', error);
+      throw error;
     }
-}
+  }
 
 
 function App() {
