@@ -20,20 +20,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const SCREEN_WIDTH = 1920;
 const SCREEN_HEIGHT = 1080;
 
-interface ObraAPI {
-    id: number;
-    apelido?: string;
-    numero?: string;
-    situacao?: string;
-    localizacao?: string;
-    regiao?: string;
-    numero_contrato?: string;
-    nome_contratado?: string;
-    valor_total_contratos?: number;
-    progresso?: number | string;
-    data_inicio?: string;
-    previsao_termino?: string;
-}
+
 
 interface Obra {
     id: number;
