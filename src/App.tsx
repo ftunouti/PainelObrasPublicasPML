@@ -31,7 +31,7 @@ interface Obra {
     progresso: number;
     data_inicio: string;
     previsao_termino: string;
-    situacaoDescricao: string;
+    fichaLink: string;
     localizacao: string;
 }
 
@@ -42,7 +42,7 @@ async function fetchObras() {
           id
           apelido
           numero
-          situacao
+          url
           localizacao
           regiao
           numero_contrato
@@ -54,27 +54,27 @@ async function fetchObras() {
         }
       }
     `;
-  
+
     try {
-      const response = await fetch('https://painel-obras-publicas-pml.vercel.app/api/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Erro na requisição');
-      }
-  
-      const result = await response.json();
-      return result.data.obrasServicosDetails;
+        const response = await fetch('https://painel-obras-publicas-pml.vercel.app/api/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro na requisição');
+        }
+
+        const result = await response.json();
+        return result.data.obrasServicosDetails;
     } catch (error) {
-      console.error('Erro ao buscar obras:', error);
-      throw error;
+        console.error('Erro ao buscar obras:', error);
+        throw error;
     }
-  }
+}
 
 
 function App() {
@@ -109,7 +109,7 @@ function App() {
                     progresso: obra.progresso || 0,
                     data_inicio: obra.data_inicio,
                     previsao_termino: obra.previsao_termino,
-                    situacaoDescricao: obra.situacao || 'Em andamento',
+                    fichaLink: obra.url || 'Link',
                     localizacao: obra.localizacao || 'Local não especificado'
                 }));
                 setObras(dadosFormatados);
@@ -302,7 +302,20 @@ function App() {
                                     <span>Região: {obraAtual.regiao}</span>
                                     <span>Contratado: {obraAtual.nome_contratado}</span>
                                     <span>Local: {obraAtual.localizacao}</span>
-                                    <span>Status: {obraAtual.situacaoDescricao}</span>
+
+                                </div>
+                                <div>
+                                    <span>
+                                        {' '}
+                                        <a
+                                            href={obraAtual.fichaLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded ml-2"
+                                        >
+                                            +Info
+                                        </a>
+                                    </span>
                                 </div>
                             </div>
 
@@ -317,6 +330,7 @@ function App() {
                                         style={{ width: `${percentual}%` }}
                                     ></div>
                                 </div>
+
                             </div>
 
                             <div className="grid grid-cols-3 gap-8 mt-auto">
