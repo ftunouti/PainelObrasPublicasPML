@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Calendar, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
+import { QRCodeSVG } from 'qrcode.react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -298,26 +299,38 @@ function App() {
                         <div className="h-full flex flex-col">
                             <div className="mb-6">
                                 <h2 className="text-4xl font-bold mb-4">{obraAtual.descricao}</h2>
-                                <div className="flex flex-wrap gap-6 text-xl">
-                                    <span>Região: {obraAtual.regiao}</span>
-                                    <span>Contratado: {obraAtual.nome_contratado}</span>
-                                    <span>Local: {obraAtual.localizacao}</span>
 
-                                </div>
-                                <div>
-                                    <span>
-                                        {' '}
+                                <div className="flex w-full gap-4 text-xl">
+                                    {/* Coluna da esquerda - 4/5 */}
+                                    <div className="w-4/5 space-y-1">
+                                        <div>Região: {obraAtual.regiao}</div>
+                                        <div>Contratado: {obraAtual.nome_contratado}</div>
+                                        <div>Local: {obraAtual.localizacao}</div>
+                                    </div>
+
+                                    {/* Coluna da direita - 1/5 */}
+                                    <div className="w-1/5 flex flex-col items-center justify-center space-y-4">
                                         <a
                                             href={obraAtual.fichaLink}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded ml-2"
+                                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                         >
                                             +Info
                                         </a>
-                                    </span>
+
+                                        <QRCodeSVG
+                                            value={obraAtual.fichaLink}
+                                            size={96}
+                                            bgColor="#ffffff"
+                                            fgColor="#000000"
+                                            level="H"
+                                        />
+                                    </div>
+
                                 </div>
                             </div>
+
 
                             <div className="mt-6 mb-10">
                                 <div className="flex justify-between text-3xl">
