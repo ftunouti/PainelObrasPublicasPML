@@ -1,5 +1,5 @@
 // FotoPainel.tsx
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 interface FotoPainelProps {
   obraId: number;
