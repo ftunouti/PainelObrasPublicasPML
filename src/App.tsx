@@ -15,6 +15,7 @@ import {
 } from 'chart.js';
 import logoPML from './img/logoPML.jpg';
 import './App.css';
+import FotoPainel from './FotoPainel';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -86,7 +87,7 @@ function App() {
     const [error, setError] = useState<string | null>(null);
     const obrasListRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
+    const [fotoUrl, setFotoUrl] = useState<string | null>(null);
     useEffect(() => {
         const interval = setInterval(() => {
             window.location.reload();
@@ -271,6 +272,11 @@ function App() {
     const totalObras = obras.length;
     const totalInvestido = obras.reduce((total, obra) => total + obra.valor_total, 0);
 
+    
+
+    
+
+
     return (
         <div
             className="min-h-screen text-white overflow-hidden flex flex-col"
@@ -302,14 +308,14 @@ function App() {
 
                                 <div className="flex w-full gap-4 text-xl">
                                     {/* Coluna da esquerda - 4/5 */}
-                                    <div className="w-4/5 space-y-1">
+                                    <div className="w-5/6 space-y-1">
                                         <div>Região: {obraAtual.regiao}</div>
                                         <div>Contratado: {obraAtual.nome_contratado}</div>
                                         <div>Local: {obraAtual.localizacao}</div>
                                     </div>
 
                                     {/* Coluna da direita - 1/5 */}
-                                    <div className="w-1/5 flex flex-col items-center justify-center space-y-4">
+                                    <div className="w-1/6 flex flex-col items-center justify-center space-y-4">
                                         <a
                                             href={obraAtual.fichaLink}
                                             target="_blank"
@@ -345,6 +351,25 @@ function App() {
                                 </div>
 
                             </div>
+
+                            {/* Foto Atual */}
+
+                            <FotoPainel obraId={obraAtual.id} onFotoUrl={setFotoUrl} />
+
+                            {fotoUrl && (
+                                <div className="mt-4 flex justify-center">
+                                    <img
+                                        src={fotoUrl}
+                                        alt="Foto Painel"
+                                        className="rounded-xl object-contain max-h-[300px] w-1/2"
+                                    />
+                                </div>
+                            )}
+
+
+
+
+
 
                             <div className="grid grid-cols-3 gap-8 mt-auto">
                                 <div>
